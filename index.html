@@ -2,64 +2,90 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Hand Tracking! • A-Frame</title>
-    <meta name="description" content="Hand Tracking! • A-Frame">
-    <script src="https://aframe.io/releases/1.8.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@gh-pages/examples/js/info-message.js"></script>
-    <script src="https://unpkg.com/aframe-environment-component@1.5.x/dist/aframe-environment-component.min.js"></script>
-    <script src="pinchable.js"></script>
-    <script src="color-change.js"></script>
-    <script src="slider.js"></script>
-    <script src="size-change.js"></script>
-    <script src="button.js"></script>
-    <script src="menu.js"></script>
-    <script src="pressable.js"></script>
-    <script src="event-manager.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@gh-pages/examples/js/remix-dropdown.js"></script>
+    <title>Tarea VR - Interactiva</title>
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-environment-component@1.5.0/dist/aframe-environment-component.min.js"></script>
   </head>
   <body>
-    <a-scene environment info-message="htmlSrc: #messageText">
-      <a-assets>
-        <a-asset-item id="messageText" src="message.html"></a-asset-item>
-      </a-assets>
-      <a-entity
-        id="boxGeometry"
-        position="-0.4 2.5 -1"
-        rotation="45 45 0"
-        geometry="primitive: dodecahedron; radius: 1"
-        material="color: #ff4b5c"
-        size-change
-        scale="0.1 0.1 0.1"
-      ></a-entity>
-       <a-entity
-        id="torusGeometry"
-        position="0 2.0 -1"
-        rotation="45 45 0"
-        geometry="primitive: torus; radius: 0.4; radius-tubular: 0.06"
-        material="color: #4004e7"
-        size-change
-        visible="false"
-        scale="0.4 0.4 0.4"
-      ></a-entity>
-       <a-entity
-        id="sphereGeometry"
-        position="-0.782 2.680 -0.972"
-        rotation="45 45 0"
-        geometry="primitive: sphere; radius: 0.6;"
-        material="color: #d400ff"
-        size-change
-        visible="false"
-        scale="0.5 0.5 0.5"
-      ></a-entity>
-      <a-entity id="menu" menu position="0 1.5 -0.5" rotation="-45 0 0" event-manager>
-        <a-entity slider position="0 0.10 0"></a-entity>
-        <a-entity id="sphereButton" button="label: sphere" position="-0.15 0 0"></a-entity>
-        <a-entity id="boxButton" button="label: dodecah" position="0 0 0"></a-entity>
-        <a-entity id="torusButton" button="label: torus" position="0.15 0 0"></a-entity>
-        <a-entity id="darkModeButton" button="label: Dark Mode; width: 0.20; toggleable: true" position="0 -0.10 0"></a-entity>
+    <a-scene>
+      <!-- Cursor para poder hacer clic con el mouse -->
+      <a-entity cursor="rayOrigin: mouse" raycaster="objects: .boton-click"></a-entity>
+
+      <!-- Fondo (Environment) -->
+      <a-entity id="escenario" environment="preset: contact"></a-entity>
+
+      <!-- LAS 3 FIGURAS (Solo el Dodecaedro empieza visible) -->
+      <a-entity id="dodeca" position="0 2.5 -2" geometry="primitive: dodecahedron" material="color: #ff4b5c" scale="0.4 0.4 0.4" visible="true"></a-entity>
+      <a-entity id="esfera" position="0 2.5 -2" geometry="primitive: sphere" material="color: #d400ff" scale="0.5 0.5 0.5" visible="false"></a-entity>
+      <a-entity id="toro" position="0 2.5 -2" geometry="primitive: torus; radius: 0.4; radius-tubular: 0.05" material="color: #4004e7" scale="0.6 0.6 0.6" visible="false"></a-entity>
+
+      <!-- EL TABLERO -->
+      <a-entity id="menu" position="0 1.2 -1" rotation="-30 0 0">
+        <a-box width="1.2" height="0.6" depth="0.05" color="#222"></a-box>
+        
+        <!-- Botón Sphere -->
+        <a-box id="btn-esfera" class="boton-click" position="-0.35 0 0.03" width="0.25" height="0.15" depth="0.02" color="#d400ff">
+            <a-text value="SPHERE" align="center" position="0 0 0.06" scale="0.3 0.3 0.3"></a-text>
+        </a-box>
+
+        <!-- Botón Dodecah -->
+        <a-box id="btn-dodeca" class="boton-click" position="0 0 0.03" width="0.25" height="0.15" depth="0.02" color="#ff4b5c">
+            <a-text value="DODEC" align="center" position="0 0 0.06" scale="0.3 0.3 0.3"></a-text>
+        </a-box>
+
+        <!-- Botón Torus -->
+        <a-box id="btn-toro" class="boton-click" position="0.35 0 0.03" width="0.25" height="0.15" depth="0.02" color="#4004e7">
+            <a-text value="TORUS" align="center" position="0 0 0.06" scale="0.3 0.3 0.3"></a-text>
+        </a-box>
+
+        <!-- Botón Dark Mode -->
+        <a-box id="btn-dark" class="boton-click" position="0 -0.2 0.03" width="0.6" height="0.1" depth="0.02" color="#444">
+            <a-text value="DARK MODE" align="center" position="0 0 0.06" scale="0.3 0.3 0.3"></a-text>
+        </a-box>
       </a-entity>
-      <a-entity hand-tracking-controls="hand: left"></a-entity>
-      <a-entity hand-tracking-controls="hand: right"></a-entity>
+
+      <a-camera position="0 1.6 2"></a-camera>
     </a-scene>
+
+    <script>
+      // Lógica para cambiar las figuras
+      const figDodeca = document.querySelector('#dodeca');
+      const figEsfera = document.querySelector('#esfera');
+      const figToro = document.querySelector('#toro');
+      const escenario = document.querySelector('#escenario');
+
+      function ocultarTodo() {
+        figDodeca.setAttribute('visible', 'false');
+        figEsfera.setAttribute('visible', 'false');
+        figToro.setAttribute('visible', 'false');
+      }
+
+      document.querySelector('#btn-esfera').addEventListener('click', () => {
+        ocultarTodo();
+        figEsfera.setAttribute('visible', 'true');
+      });
+
+      document.querySelector('#btn-dodeca').addEventListener('click', () => {
+        ocultarTodo();
+        figDodeca.setAttribute('visible', 'true');
+      });
+
+      document.querySelector('#btn-toro').addEventListener('click', () => {
+        ocultarTodo();
+        figToro.setAttribute('visible', 'true');
+      });
+
+      // Lógica para el Dark Mode
+      let esOscuro = false;
+      document.querySelector('#btn-dark').addEventListener('click', () => {
+        if (!esOscuro) {
+          escenario.setAttribute('environment', 'preset: starry');
+          esOscuro = true;
+        } else {
+          escenario.setAttribute('environment', 'preset: contact');
+          esOscuro = false;
+        }
+      });
+    </script>
   </body>
 </html>
