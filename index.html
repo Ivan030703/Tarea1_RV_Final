@@ -1,123 +1,66 @@
+
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Tarea VR - Posiciones Exactas</title>
-    <!-- Usamos una versión estable para que cargue rápido -->
-    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-    <script src="https://unpkg.com/aframe-environment-component@1.3.1/dist/aframe-environment-component.min.js"></script>
+    <title>Hand Tracking! • A-Frame</title>
+    <meta name="description" content="Hand Tracking! • A-Frame">
+    <script src="https://aframe.io/releases/1.8.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@gh-pages/examples/js/info-message.js"></script>
+    <script src="https://unpkg.com/aframe-environment-component@1.5.x/dist/aframe-environment-component.min.js"></script>
+    <script src="pinchable.js"></script>
+    <script src="color-change.js"></script>
+    <script src="slider.js"></script>
+    <script src="size-change.js"></script>
+    <script src="button.js"></script>
+    <script src="menu.js"></script>
+    <script src="pressable.js"></script>
+    <script src="event-manager.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@gh-pages/examples/js/remix-dropdown.js"></script>
   </head>
   <body>
-    <a-scene>
-      <!-- Cursor para interactuar con el ratón -->
-      <a-entity cursor="rayOrigin: mouse" raycaster="objects: .clic"></a-entity>
-
-      <!-- FONDO: Cuadrícula gris con blanco (Preset Contact sin árboles) -->
-      <a-entity id="sky" environment="preset: contact; dressingAmount: 0; grid: cross"></a-entity>
-
-      <!-- FIGURAS EN TUS POSICIONES EXACTAS -->
+    <a-scene environment info-message="htmlSrc: #messageText">
+      <a-assets>
+        <a-asset-item id="messageText" src="message.html"></a-asset-item>
+      </a-assets>
       <a-entity
         id="boxGeometry"
         position="-0.4 2.5 -1"
         rotation="45 45 0"
         geometry="primitive: dodecahedron; radius: 1"
         material="color: #ff4b5c"
+        size-change
         scale="0.1 0.1 0.1"
-        visible="true"
       ></a-entity>
-
-      <a-entity
+       <a-entity
         id="torusGeometry"
         position="0 2.0 -1"
         rotation="45 45 0"
         geometry="primitive: torus; radius: 0.4; radius-tubular: 0.06"
         material="color: #4004e7"
-        scale="0.4 0.4 0.4"
+        size-change
         visible="false"
+        scale="0.4 0.4 0.4"
       ></a-entity>
-
-      <a-entity
+       <a-entity
         id="sphereGeometry"
         position="-0.782 2.680 -0.972"
         rotation="45 45 0"
         geometry="primitive: sphere; radius: 0.6;"
         material="color: #d400ff"
-        scale="0.5 0.5 0.5"
+        size-change
         visible="false"
+        scale="0.5 0.5 0.5"
       ></a-entity>
-
-      <!-- MENU EN TU POSICIÓN EXACTA (0 1.5 -0.5 con rotación -45 0 0) -->
-      <a-entity id="menu" position="0 1.5 -0.5" rotation="-45 0 0">
-        <a-box width="0.6" height="0.4" depth="0.02" color="#999"></a-box>
-        
-        <!-- Adorno del slider superior -->
-        <a-box position="0 0.12 0.02" width="0.4" height="0.01" depth="0.01" color="white"></a-box>
-        <a-cylinder position="0 0.12 0.03" radius="0.03" height="0.08" rotation="90 0 0" color="#3b5998"></a-cylinder>
-
-        <!-- Botones (Simulando los del código original) -->
-        <a-box id="btn-esfera" class="clic" position="-0.15 0 0.02" width="0.12" height="0.08" depth="0.02" color="#3b5998">
-            <a-text value="sphere" align="center" position="0 0 0.03" scale="0.15 0.15 0.15"></a-text>
-        </a-box>
-
-        <a-box id="btn-dodeca" class="clic" position="0 0 0.02" width="0.12" height="0.08" depth="0.02" color="#248f24">
-            <a-text value="dodecah" align="center" position="0 0 0.03" scale="0.15 0.15 0.15"></a-text>
-        </a-box>
-
-        <a-box id="btn-toro" class="clic" position="0.15 0 0.02" width="0.12" height="0.08" depth="0.02" color="#3b5998">
-            <a-text value="torus" align="center" position="0 0 0.03" scale="0.15 0.15 0.15"></a-text>
-        </a-box>
-
-        <!-- Botón Dark Mode circular abajo -->
-        <a-cylinder id="btn-dark" class="clic" position="0 -0.12 0.02" radius="0.08" height="0.02" rotation="90 0 0" color="#ff4b5c"></a-cylinder>
+      <a-entity id="menu" menu position="0 1.5 -0.5" rotation="-45 0 0" event-manager>
+        <a-entity slider position="0 0.10 0"></a-entity>
+        <a-entity id="sphereButton" button="label: sphere" position="-0.15 0 0"></a-entity>
+        <a-entity id="boxButton" button="label: dodecah" position="0 0 0"></a-entity>
+        <a-entity id="torusButton" button="label: torus" position="0.15 0 0"></a-entity>
+        <a-entity id="darkModeButton" button="label: Dark Mode; width: 0.20; toggleable: true" position="0 -0.10 0"></a-entity>
       </a-entity>
-
-      <!-- Cámara posicionada para ver todo cerca -->
-      <a-entity camera position="0 1.6 0.8" look-controls></a-entity>
+      <a-entity hand-tracking-controls="hand: left"></a-entity>
+      <a-entity hand-tracking-controls="hand: right"></a-entity>
     </a-scene>
-
-    <script>
-      // Lógica para que los botones funcionen sin archivos externos
-      const dodeca = document.querySelector('#boxGeometry');
-      const torus = document.querySelector('#torusGeometry');
-      const sphere = document.querySelector('#sphereGeometry');
-      const sky = document.querySelector('#sky');
-
-      const btnD = document.querySelector('#btn-dodeca');
-      const btnE = document.querySelector('#btn-esfera');
-      const btnT = document.querySelector('#btn-toro');
-
-      function hideAll() {
-        dodeca.setAttribute('visible', false);
-        torus.setAttribute('visible', false);
-        sphere.setAttribute('visible', false);
-        btnD.setAttribute('color', '#3b5998');
-        btnE.setAttribute('color', '#3b5998');
-        btnT.setAttribute('color', '#3b5998');
-      }
-
-      document.querySelector('#btn-esfera').addEventListener('click', () => {
-        hideAll();
-        sphere.setAttribute('visible', true);
-        btnE.setAttribute('color', '#248f24');
-      });
-
-      document.querySelector('#btn-dodeca').addEventListener('click', () => {
-        hideAll();
-        dodeca.setAttribute('visible', true);
-        btnD.setAttribute('color', '#248f24');
-      });
-
-      document.querySelector('#btn-toro').addEventListener('click', () => {
-        hideAll();
-        torus.setAttribute('visible', true);
-        btnT.setAttribute('color', '#248f24');
-      });
-
-      let dark = false;
-      document.querySelector('#btn-dark').addEventListener('click', () => {
-        dark = !dark;
-        sky.setAttribute('environment', dark ? 'preset: tron' : 'preset: contact; dressingAmount: 0');
-      });
-    </script>
   </body>
 </html>
