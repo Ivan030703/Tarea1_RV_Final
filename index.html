@@ -2,88 +2,114 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Tarea VR - Interactiva</title>
+    <title>Tarea VR - Interactiva Corregida</title>
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
     <script src="https://unpkg.com/aframe-environment-component@1.5.0/dist/aframe-environment-component.min.js"></script>
   </head>
   <body>
     <a-scene>
-      <!-- Cursor para poder hacer clic con el mouse -->
-      <a-entity cursor="rayOrigin: mouse" raycaster="objects: .boton-click"></a-entity>
+      <!-- Cursor para interactuar con el mouse -->
+      <a-entity cursor="rayOrigin: mouse" raycaster="objects: .boton"></a-entity>
 
-      <!-- Fondo (Environment) -->
-      <a-entity id="escenario" environment="preset: contact"></a-entity>
+      <!-- Escenario: Sin árboles (dressingAmount: 0) -->
+      <a-entity id="escenario" environment="preset: contact; dressingAmount: 0"></a-entity>
 
-      <!-- LAS 3 FIGURAS (Solo el Dodecaedro empieza visible) -->
-      <a-entity id="dodeca" position="0 2.5 -2" geometry="primitive: dodecahedron" material="color: #ff4b5c" scale="0.4 0.4 0.4" visible="true"></a-entity>
-      <a-entity id="esfera" position="0 2.5 -2" geometry="primitive: sphere" material="color: #d400ff" scale="0.5 0.5 0.5" visible="false"></a-entity>
-      <a-entity id="toro" position="0 2.5 -2" geometry="primitive: torus; radius: 0.4; radius-tubular: 0.05" material="color: #4004e7" scale="0.6 0.6 0.6" visible="false"></a-entity>
+      <!-- FIGURAS EN SUS POSICIONES ORIGINALES -->
+      
+      <!-- Dodecaedro (Inicia visible) -->
+      <a-entity
+        id="boxGeometry"
+        position="-0.4 2.5 -1"
+        rotation="45 45 0"
+        geometry="primitive: dodecahedron; radius: 1"
+        material="color: #ff4b5c"
+        scale="0.1 0.1 0.1"
+        visible="true"
+      ></a-entity>
 
-      <!-- EL TABLERO -->
-      <a-entity id="menu" position="0 1.2 -1" rotation="-30 0 0">
-        <a-box width="1.2" height="0.6" depth="0.05" color="#222"></a-box>
+      <!-- Torus (Inicia oculto) -->
+      <a-entity
+        id="torusGeometry"
+        position="0 2.0 -1"
+        rotation="45 45 0"
+        geometry="primitive: torus; radius: 0.4; radius-tubular: 0.06"
+        material="color: #4004e7"
+        scale="0.4 0.4 0.4"
+        visible="false"
+      ></a-entity>
+
+      <!-- Esfera (Inicia oculta) -->
+      <a-entity
+        id="sphereGeometry"
+        position="-0.782 2.680 -0.972"
+        rotation="45 45 0"
+        geometry="primitive: sphere; radius: 0.6;"
+        material="color: #d400ff"
+        scale="0.5 0.5 0.5"
+        visible="false"
+      ></a-entity>
+
+      <!-- EL TABLERO (En su posición original 0 1.5 -0.5) -->
+      <a-entity id="menu" position="0 1.5 -0.5" rotation="-45 0 0">
+        <a-box width="0.5" height="0.4" depth="0.05" color="#999"></a-box>
         
-        <!-- Botón Sphere -->
-        <a-box id="btn-esfera" class="boton-click" position="-0.35 0 0.03" width="0.25" height="0.15" depth="0.02" color="#d400ff">
-            <a-text value="SPHERE" align="center" position="0 0 0.06" scale="0.3 0.3 0.3"></a-text>
+        <!-- Botones con clase "boton" para que el cursor los detecte -->
+        <a-box id="sphereButton" class="boton" position="-0.15 0.05 0.03" width="0.12" height="0.08" depth="0.02" color="#d400ff">
+            <a-text value="sphere" align="center" position="0 0 0.02" scale="0.15 0.15 0.15"></a-text>
         </a-box>
 
-        <!-- Botón Dodecah -->
-        <a-box id="btn-dodeca" class="boton-click" position="0 0 0.03" width="0.25" height="0.15" depth="0.02" color="#ff4b5c">
-            <a-text value="DODEC" align="center" position="0 0 0.06" scale="0.3 0.3 0.3"></a-text>
+        <a-box id="boxButton" class="boton" position="0 0.05 0.03" width="0.12" height="0.08" depth="0.02" color="#ff4b5c">
+            <a-text value="dodecah" align="center" position="0 0 0.02" scale="0.15 0.15 0.15"></a-text>
         </a-box>
 
-        <!-- Botón Torus -->
-        <a-box id="btn-toro" class="boton-click" position="0.35 0 0.03" width="0.25" height="0.15" depth="0.02" color="#4004e7">
-            <a-text value="TORUS" align="center" position="0 0 0.06" scale="0.3 0.3 0.3"></a-text>
+        <a-box id="torusButton" class="boton" position="0.15 0.05 0.03" width="0.12" height="0.08" depth="0.02" color="#4004e7">
+            <a-text value="torus" align="center" position="0 0 0.02" scale="0.15 0.15 0.15"></a-text>
         </a-box>
 
-        <!-- Botón Dark Mode -->
-        <a-box id="btn-dark" class="boton-click" position="0 -0.2 0.03" width="0.6" height="0.1" depth="0.02" color="#444">
-            <a-text value="DARK MODE" align="center" position="0 0 0.06" scale="0.3 0.3 0.3"></a-text>
+        <a-box id="darkModeButton" class="boton" position="0 -0.1 0.03" width="0.4" height="0.08" depth="0.02" color="#333">
+            <a-text value="Dark Mode" align="center" position="0 0 0.02" scale="0.15 0.15 0.15"></a-text>
         </a-box>
       </a-entity>
 
-      <a-camera position="0 1.6 2"></a-camera>
+      <a-camera position="0 1.6 1"></a-camera>
     </a-scene>
 
+    <!-- Este es el "cerebro" que hace que los botones funcionen -->
     <script>
-      // Lógica para cambiar las figuras
-      const figDodeca = document.querySelector('#dodeca');
-      const figEsfera = document.querySelector('#esfera');
-      const figToro = document.querySelector('#toro');
-      const escenario = document.querySelector('#escenario');
+      const dodeca = document.querySelector('#boxGeometry');
+      const torus = document.querySelector('#torusGeometry');
+      const sphere = document.querySelector('#sphereGeometry');
+      const fondo = document.querySelector('#escenario');
 
-      function ocultarTodo() {
-        figDodeca.setAttribute('visible', 'false');
-        figEsfera.setAttribute('visible', 'false');
-        figToro.setAttribute('visible', 'false');
+      function ocultar() {
+        dodeca.setAttribute('visible', 'false');
+        torus.setAttribute('visible', 'false');
+        sphere.setAttribute('visible', 'false');
       }
 
-      document.querySelector('#btn-esfera').addEventListener('click', () => {
-        ocultarTodo();
-        figEsfera.setAttribute('visible', 'true');
+      document.querySelector('#sphereButton').addEventListener('click', () => {
+        ocultar();
+        sphere.setAttribute('visible', 'true');
       });
 
-      document.querySelector('#btn-dodeca').addEventListener('click', () => {
-        ocultarTodo();
-        figDodeca.setAttribute('visible', 'true');
+      document.querySelector('#boxButton').addEventListener('click', () => {
+        ocultar();
+        dodeca.setAttribute('visible', 'true');
       });
 
-      document.querySelector('#btn-toro').addEventListener('click', () => {
-        ocultarTodo();
-        figToro.setAttribute('visible', 'true');
+      document.querySelector('#torusButton').addEventListener('click', () => {
+        ocultar();
+        torus.setAttribute('visible', 'true');
       });
 
-      // Lógica para el Dark Mode
-      let esOscuro = false;
-      document.querySelector('#btn-dark').addEventListener('click', () => {
-        if (!esOscuro) {
-          escenario.setAttribute('environment', 'preset: starry');
-          esOscuro = true;
+      let modoOscuro = false;
+      document.querySelector('#darkModeButton').addEventListener('click', () => {
+        if (!modoOscuro) {
+          fondo.setAttribute('environment', 'preset: starry; dressingAmount: 0');
+          modoOscuro = true;
         } else {
-          escenario.setAttribute('environment', 'preset: contact');
-          esOscuro = false;
+          fondo.setAttribute('environment', 'preset: contact; dressingAmount: 0');
+          modoOscuro = false;
         }
       });
     </script>
