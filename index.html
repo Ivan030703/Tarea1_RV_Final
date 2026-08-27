@@ -2,113 +2,103 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Tarea VR - Interactiva Corregida</title>
+    <title>Tarea VR - Réplica Exacta</title>
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
     <script src="https://unpkg.com/aframe-environment-component@1.5.0/dist/aframe-environment-component.min.js"></script>
   </head>
   <body>
     <a-scene>
       <!-- Cursor para interactuar con el mouse -->
-      <a-entity cursor="rayOrigin: mouse" raycaster="objects: .boton"></a-entity>
+      <a-entity cursor="rayOrigin: mouse" raycaster="objects: .clickable"></a-entity>
 
-      <!-- Escenario: Sin árboles (dressingAmount: 0) -->
-      <a-entity id="escenario" environment="preset: contact; dressingAmount: 0"></a-entity>
+      <!-- Escenario inicial (Día) -->
+      <a-entity id="sky" environment="preset: contact; dressingAmount: 0; grid: cross"></a-entity>
 
-      <!-- FIGURAS EN SUS POSICIONES ORIGINALES -->
-      
-      <!-- Dodecaedro (Inicia visible) -->
-      <a-entity
-        id="boxGeometry"
-        position="-0.4 2.5 -1"
-        rotation="45 45 0"
-        geometry="primitive: dodecahedron; radius: 1"
-        material="color: #ff4b5c"
-        scale="0.1 0.1 0.1"
-        visible="true"
-      ></a-entity>
+      <!-- FIGURAS (Posicionadas arriba en el centro como en la imagen) -->
+      <a-entity id="fig-dodeca" position="0 3.5 -3" geometry="primitive: dodecahedron" material="color: #ff4b5c" scale="0.5 0.5 0.5" visible="true"></a-entity>
+      <a-entity id="fig-esfera" position="0 3.5 -3" geometry="primitive: sphere" material="color: #d400ff" scale="0.6 0.6 0.6" visible="false"></a-entity>
+      <a-entity id="fig-toro" position="0 3.5 -3" geometry="primitive: torus; radius: 0.5; radius-tubular: 0.1" material="color: #4004e7" scale="0.8 0.8 0.8" visible="false"></a-entity>
 
-      <!-- Torus (Inicia oculto) -->
-      <a-entity
-        id="torusGeometry"
-        position="0 2.0 -1"
-        rotation="45 45 0"
-        geometry="primitive: torus; radius: 0.4; radius-tubular: 0.06"
-        material="color: #4004e7"
-        scale="0.4 0.4 0.4"
-        visible="false"
-      ></a-entity>
-
-      <!-- Esfera (Inicia oculta) -->
-      <a-entity
-        id="sphereGeometry"
-        position="-0.782 2.680 -0.972"
-        rotation="45 45 0"
-        geometry="primitive: sphere; radius: 0.6;"
-        material="color: #d400ff"
-        scale="0.5 0.5 0.5"
-        visible="false"
-      ></a-entity>
-
-      <!-- EL TABLERO (En su posición original 0 1.5 -0.5) -->
-      <a-entity id="menu" position="0 1.5 -0.5" rotation="-45 0 0">
-        <a-box width="0.5" height="0.4" depth="0.05" color="#999"></a-box>
+      <!-- TABLERO GRIS (Réplica de la imagen) -->
+      <a-entity id="menu" position="0 1.2 -1" rotation="-35 0 0">
+        <!-- Base del tablero -->
+        <a-box width="1.3" height="0.8" depth="0.05" color="#999"></a-box>
         
-        <!-- Botones con clase "boton" para que el cursor los detecte -->
-        <a-box id="sphereButton" class="boton" position="-0.15 0.05 0.03" width="0.12" height="0.08" depth="0.02" color="#d400ff">
-            <a-text value="sphere" align="center" position="0 0 0.02" scale="0.15 0.15 0.15"></a-text>
+        <!-- Barra superior (Slider visual) -->
+        <a-box position="0 0.25 0.03" width="0.8" height="0.02" depth="0.02" color="white"></a-box>
+        <a-cylinder position="0 0.25 0.04" radius="0.04" height="0.1" rotation="90 0 0" color="#4004e7"></a-cylinder>
+
+        <!-- Botón SPHERE -->
+        <a-box id="btn-esfera" class="clickable" position="-0.35 0.05 0.03" width="0.25" height="0.12" depth="0.03" color="#3b5998">
+            <a-text value="sphere" align="center" position="0 0 0.05" scale="0.25 0.25 0.25" italic="true"></a-text>
         </a-box>
 
-        <a-box id="boxButton" class="boton" position="0 0.05 0.03" width="0.12" height="0.08" depth="0.02" color="#ff4b5c">
-            <a-text value="dodecah" align="center" position="0 0 0.02" scale="0.15 0.15 0.15"></a-text>
+        <!-- Botón DODECA (Inicia verde porque la figura inicia visible) -->
+        <a-box id="btn-dodeca" class="clickable" position="0 0.05 0.03" width="0.25" height="0.12" depth="0.03" color="#248f24">
+            <a-text value="dodeca" align="center" position="0 0 0.05" scale="0.25 0.25 0.25" italic="true"></a-text>
         </a-box>
 
-        <a-box id="torusButton" class="boton" position="0.15 0.05 0.03" width="0.12" height="0.08" depth="0.02" color="#4004e7">
-            <a-text value="torus" align="center" position="0 0 0.02" scale="0.15 0.15 0.15"></a-text>
+        <!-- Botón TORUS -->
+        <a-box id="btn-toro" class="clickable" position="0.35 0.05 0.03" width="0.25" height="0.12" depth="0.03" color="#3b5998">
+            <a-text value="torus" align="center" position="0 0 0.05" scale="0.25 0.25 0.25" italic="true"></a-text>
         </a-box>
 
-        <a-box id="darkModeButton" class="boton" position="0 -0.1 0.03" width="0.4" height="0.08" depth="0.02" color="#333">
-            <a-text value="Dark Mode" align="center" position="0 0 0.02" scale="0.15 0.15 0.15"></a-text>
-        </a-box>
+        <!-- Círculo Rojo (DARK MODE TOGGLE) -->
+        <a-cylinder id="btn-dark" class="clickable" position="0 -0.25 0.03" radius="0.12" height="0.04" rotation="90 0 0" color="#ff4b5c"></a-cylinder>
       </a-entity>
 
-      <a-camera position="0 1.6 1"></a-camera>
+      <a-camera position="0 1.6 2"></a-camera>
     </a-scene>
 
-    <!-- Este es el "cerebro" que hace que los botones funcionen -->
     <script>
-      const dodeca = document.querySelector('#boxGeometry');
-      const torus = document.querySelector('#torusGeometry');
-      const sphere = document.querySelector('#sphereGeometry');
-      const fondo = document.querySelector('#escenario');
+      const dodeca = document.querySelector('#fig-dodeca');
+      const esfera = document.querySelector('#fig-esfera');
+      const toro = document.querySelector('#fig-toro');
+      
+      const bDodeca = document.querySelector('#btn-dodeca');
+      const bEsfera = document.querySelector('#btn-esfera');
+      const bToro = document.querySelector('#btn-toro');
+      const sky = document.querySelector('#sky');
 
-      function ocultar() {
+      const BLUE = "#3b5998";
+      const GREEN = "#248f24";
+
+      function resetBotones() {
+        bDodeca.setAttribute('color', BLUE);
+        bEsfera.setAttribute('color', BLUE);
+        bToro.setAttribute('color', BLUE);
         dodeca.setAttribute('visible', 'false');
-        torus.setAttribute('visible', 'false');
-        sphere.setAttribute('visible', 'false');
+        esfera.setAttribute('visible', 'false');
+        toro.setAttribute('visible', 'false');
       }
 
-      document.querySelector('#sphereButton').addEventListener('click', () => {
-        ocultar();
-        sphere.setAttribute('visible', 'true');
+      // Lógica de botones de figuras
+      bEsfera.addEventListener('click', () => {
+        resetBotones();
+        bEsfera.setAttribute('color', GREEN);
+        esfera.setAttribute('visible', 'true');
       });
 
-      document.querySelector('#boxButton').addEventListener('click', () => {
-        ocultar();
+      bDodeca.addEventListener('click', () => {
+        resetBotones();
+        bDodeca.setAttribute('color', GREEN);
         dodeca.setAttribute('visible', 'true');
       });
 
-      document.querySelector('#torusButton').addEventListener('click', () => {
-        ocultar();
-        torus.setAttribute('visible', 'true');
+      bToro.addEventListener('click', () => {
+        resetBotones();
+        bToro.setAttribute('color', GREEN);
+        toro.setAttribute('visible', 'true');
       });
 
+      // Lógica de Dark Mode (Círculo rojo)
       let modoOscuro = false;
-      document.querySelector('#darkModeButton').addEventListener('click', () => {
+      document.querySelector('#btn-dark').addEventListener('click', () => {
         if (!modoOscuro) {
-          fondo.setAttribute('environment', 'preset: starry; dressingAmount: 0');
+          sky.setAttribute('environment', 'preset: tron; grid: cross');
           modoOscuro = true;
         } else {
-          fondo.setAttribute('environment', 'preset: contact; dressingAmount: 0');
+          sky.setAttribute('environment', 'preset: contact; dressingAmount: 0; grid: cross');
           modoOscuro = false;
         }
       });
